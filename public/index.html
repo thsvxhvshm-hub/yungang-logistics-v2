@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>云港国际物流（深圳）有限公司电商在途系统平台</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Microsoft YaHei",Arial,sans-serif;background:#f4f7fb;color:#172033}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#092b52,#087b9e)}
+.loginbox{width:390px;background:#fff;border-radius:18px;padding:34px;box-shadow:0 20px 70px #0004}.logo{width:54px;height:54px;border-radius:14px;background:#0b5b83;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;margin-bottom:18px}
+h1{font-size:22px;margin:0 0 8px}.sub{color:#748094;font-size:13px;margin-bottom:25px}.login input{width:100%;padding:12px;border:1px solid #d8dee8;border-radius:9px;margin:6px 0;font-size:14px}.btn{border:0;border-radius:9px;padding:10px 16px;background:#0b5b83;color:#fff;cursor:pointer}.login .btn{width:100%;margin-top:10px}.err{height:18px;color:#d33;font-size:13px}
+.app{display:none}.top{height:64px;background:#fff;border-bottom:1px solid #e7ebf1;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.brand{font-size:18px;font-weight:700}.user{font-size:13px;color:#667085}.layout{display:flex}.side{width:215px;background:#fff;min-height:calc(100vh - 64px);border-right:1px solid #e7ebf1;padding:18px 12px}.nav{padding:11px 13px;border-radius:8px;margin-bottom:5px;color:#526071;cursor:pointer}.nav.active,.nav:hover{background:#e9f4fa;color:#075879;font-weight:600}.main{flex:1;padding:25px;max-width:1500px;margin:auto;width:100%}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:15px 0 22px}.card{background:#fff;border:1px solid #e7ebf1;border-radius:13px;padding:18px}.card .n{font-size:28px;font-weight:700;margin-top:6px}.muted{color:#7a8698;font-size:13px}.toolbar{background:#fff;padding:14px;border:1px solid #e7ebf1;border-radius:13px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{padding:10px;border:1px solid #d8dee8;border-radius:8px;background:#fff}.tablewrap{background:#fff;border:1px solid #e7ebf1;border-radius:13px;overflow:auto}.table{width:100%;border-collapse:collapse;min-width:1120px}.table th,.table td{padding:12px 11px;border-bottom:1px solid #eef1f5;text-align:left;font-size:13px;vertical-align:top}.table th{background:#fafbfd;color:#667085;position:sticky;top:0}.table td{white-space:nowrap}.status{display:inline-block;padding:4px 8px;border-radius:20px;background:#eaf3f8;color:#176083;white-space:nowrap}.signed{background:#eaf7ef;color:#20834d}.pending{background:#fff6df;color:#9a6b00}.linkbtn{border:0;background:none;color:#0b668e;cursor:pointer;padding:0}.modal{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modalbox{background:#fff;border-radius:15px;max-width:850px;width:100%;max-height:90vh;overflow:auto;padding:24px}.modalgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modal input,.modal textarea,.modal select{width:100%;padding:9px;border:1px solid #d8dee8;border-radius:7px}.modal textarea{min-height:70px}.modal label{font-size:12px;color:#667085}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+@media(max-width:800px){.side{display:none}.cards{grid-template-columns:repeat(2,1fr)}.main{padding:15px}.modalgrid{grid-template-columns:1fr}}
+</style></head><body>
+<div class="login" id="login"><div class="loginbox"><div class="logo">云</div>
+<h1>云港国际物流（深圳）有限公司</h1><div class="sub">电商在途系统平台</div>
+<input id="user" value="admin" placeholder="账号"><input id="pass" type="password" placeholder="密码">
+<div class="err" id="err"></div><button class="btn" onclick="doLogin()">登录系统</button>
+<p style="font-size:12px;color:#8a94a6;text-align:center;margin-top:14px">初始管理员：SZYG001　密码：123（首次登录后请修改）</p></div></div>
+<div class="app" id="app"><div class="top"><div class="brand">云港国际物流（深圳）有限公司 · 电商在途系统平台</div><div class="user">管理员　|　<button class="linkbtn" onclick="logout()">退出</button></div></div>
+<div class="layout"><aside class="side"><div class="nav active" onclick="showPage('dashboard',this)">📊 数据总览</div>
+<div class="nav" onclick="showPage('orders',this)">📦 电商在途</div><div class="nav" onclick="openAdd()">＋ 新增货物</div>
+<div class="nav" onclick="showPage('adminSettings',this)">⚙ 管理员设置</div></aside>
+<main class="main"><section id="dashboard"><h2>数据总览</h2><div class="muted">电商货物在途状态实时管理</div>
+<div class="cards"><div class="card"><div class="muted">总票数</div><div class="n" id="total">0</div></div><div class="card"><div class="muted">运输中</div><div class="n" id="moving">0</div></div><div class="card"><div class="muted">已签收</div><div class="n" id="signed">0</div></div><div class="card"><div class="muted">待处理</div><div class="n" id="pending">0</div></div></div>
+<div class="card"><h3>目的国家分布</h3><div id="countryStats"></div></div></section>
+<section id="orders" style="display:none"><h2>电商在途</h2>
+<div class="toolbar"><input id="search" placeholder="搜索单号 / 客户 / 地址 / 货品" oninput="render()"><select id="country" onchange="render()"><option value="">全部国家</option></select>
+<select id="month" onchange="render()"><option value="">全部月份</option><option>8月</option><option>9月</option></select>
+<select id="statusFilter" onchange="render()"><option value="">全部状态</option><option value="签收">已签收</option><option value="运输">运输中</option></select>
+<button class="btn" onclick="openAdd()">＋ 新增</button><button class="btn" onclick="exportCSV()">导出CSV</button></div>
+<div class="tablewrap"><table class="table"><thead><tr><th>国家</th><th>客户名称</th><th>客户单号</th><th>收货日期</th><th>运输天数</th><th>运输方式</th><th>快递单号</th><th>货品</th><th>计重</th><th>物流进度</th><th>签收</th><th>操作</th></tr></thead><tbody id="tbody"></tbody></table></div></section><section id="adminSettings" style="display:none"><h2>管理员设置</h2><div class="card"><button class="btn" onclick="manageUsers()">账号权限管理</button> <button class="btn" onclick="showOverdue()">查看超期未签收</button></div>
+<div class="card">
+<h3>系统参数</h3>
+<div class="modalgrid">
+<div><label>公司名称</label><input id="set_company" value="云港国际物流（深圳）有限公司"></div>
+<div><label>默认运输方式</label><input id="set_mode" value="空运"></div>
+<div><label>默认物流状态</label><input id="set_status" value="运输中"></div>
+<div><label>默认管理员名称</label><input id="set_admin" value="管理员"></div>
+</div>
+<div class="actions"><button class="btn" onclick="saveSettings()">保存设置</button></div>
+</div>
+<div class="card"><h3>功能开关</h3>
+<label><input type="checkbox" id="set_csv" checked> 允许导出CSV</label><br>
+<label><input type="checkbox" id="set_remark" checked> 显示备注字段</label>
+</div>
+</section>
+</main></div></div>
+<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle">新增货物</h2><div class="modalgrid">
+<div><label>国家</label><input id="f_country"></div><div><label>件数</label><input id="f_pieces"></div><div><label>运输方式</label><input id="f_mode" value="空运"></div><div><label>收货日期</label><input id="f_ship_date" type="date"></div>
+<div><label>客户名称</label><input id="f_customer_name" placeholder="请输入客户名称"></div><div><label>客户单号</label><input id="f_customer_no" placeholder="例如：FBA15M8NG8R4"></div><div><label>快递单号</label><input id="f_tracking"></div><div><label>预计重量</label><input id="f_est_weight"></div><div><label>实际计重</label><input id="f_actual_weight"></div><div><label>末端派送查询单号</label><input id="f_lastmile"></div>
+<div><label>货品信息</label><input id="f_goods"></div><div><label>是否签收</label><select id="f_signed"><option value="">未签收</option><option value="√">已签收</option></select></div>
+<div style="grid-column:1/-1"><label>物流进度</label><input id="f_status"></div><div style="grid-column:1/-1"><label>收货地址</label><textarea id="f_address"></textarea></div><div style="grid-column:1/-1"><label>费用明细</label><textarea id="f_cost"></textarea></div><div style="grid-column:1/-1"><label>备注</label><textarea id="f_remark"></textarea></div>
+</div><div class="actions"><button class="btn" style="background:#667085" onclick="closeModal()">取消</button><button class="btn" onclick="saveForm()">保存</button></div></div></div>
+<script>
+let data=[],editIndex=-1,currentUser=null,settings={};
+const fields=['country','customer_name','customer_no','pieces','mode','ship_date','tracking','est_weight','actual_weight','lastmile','goods','status','address','cost','remark'];
+async function api(url,opt={}){const r=await fetch(url,{credentials:'include',headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt});let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||'请求失败');return j}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function canEdit(){return currentUser&&['老板','操作员'].includes(currentUser.role)}
+function canDelete(){return currentUser&&currentUser.role==='老板'}
+function applyRoleUI(){document.querySelector('.user').innerHTML=`${esc(currentUser.username)}　|　${esc(currentUser.role)}　|　<button class="linkbtn" onclick="logout()">退出</button>`;document.querySelectorAll('.nav').forEach(n=>{if(n.textContent.includes('新增货物'))n.style.display=canEdit()?'block':'none';if(n.textContent.includes('管理员设置'))n.style.display=currentUser.role==='老板'?'block':'none'});}
+async function boot(){try{const me=await api('/api/me');currentUser=me.user;login.style.display='none';app.style.display='block';applyRoleUI();await loadAll()}catch(e){login.style.display='flex';app.style.display='none'}}
+async function doLogin(){err.textContent='';try{const j=await api('/api/login',{method:'POST',body:JSON.stringify({username:user.value.trim(),password:pass.value})});currentUser=j.user;login.style.display='none';app.style.display='block';applyRoleUI();await loadAll()}catch(e){err.textContent=e.message}}
+async function logout(){await fetch('/api/logout',{method:'POST',credentials:'include'});location.reload()}
+async function loadAll(){data=await api('/api/shipments');settings=await api('/api/settings');init()}
+function daysFrom(d){if(!d)return '-';let start=new Date(d),now=new Date();if(isNaN(start))return '-';return Math.max(0,Math.floor((now-start)/86400000));}
+function showOverdue(){let n=data.filter(x=>!x.signed&&daysFrom(x.ship_date)!=='-'&&Number(daysFrom(x.ship_date))>30).length;alert('超过30天未签收：'+n+'票')}
+function init(){let cs=[...new Set(data.map(x=>x.country).filter(Boolean))];country.innerHTML='<option value="">全部国家</option>'+cs.map(x=>`<option>${esc(x)}</option>`).join('');render();dashboard();}
+function dashboard(){total.textContent=data.length;signed.textContent=data.filter(x=>x.signed==='√'||/签收/.test(x.status)).length;moving.textContent=data.filter(x=>!(x.signed==='√'||/签收/.test(x.status))).length;pending.textContent=data.filter(x=>/异常|问题|待/.test(x.status+x.remark)).length;let m={};data.forEach(x=>m[x.country]=(m[x.country]||0)+1);countryStats.innerHTML=Object.entries(m).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee"><span>${esc(k)}</span><b>${v} 票</b></div>`).join('')}
+function render(){let q=search.value.toLowerCase(),c=country.value,m=month.value,s=statusFilter.value;let arr=data.map((x,i)=>({...x,i})).filter(x=>{let t=Object.values(x).join(' ').toLowerCase();return(!q||t.includes(q))&&(!c||x.country===c)&&(!m||x.month===m)&&(!s||(s==='签收'?x.signed==='√'||/签收/.test(x.status):!(x.signed==='√'||/签收/.test(x.status))))});tbody.innerHTML=arr.length?arr.map(x=>`<tr><td><b>${esc(x.country)}</b></td><td>${esc(x.customer_name||'')}</td><td>${esc(x.customer_no)}</td><td>${esc(x.ship_date)}</td><td>${daysFrom(x.ship_date)}天</td><td>${esc(x.mode)}</td><td>${esc(x.tracking)}</td><td>${esc(x.goods)}</td><td>${esc(x.actual_weight||x.est_weight)}</td><td><span class="status ${/签收/.test(x.status)?'signed':''}">${esc(x.status||'未更新')}</span></td><td>${x.signed==='√'||/签收/.test(x.status)?'<span class="status signed">已签收</span>':'<span class="status pending">在途</span>'}</td><td>${canEdit()?`<button class="linkbtn" onclick="openEdit(${x.i})">查看/修改</button>`:''}${canDelete()?` <button class="linkbtn" onclick="deleteRow(${x.i})" style="color:#d33;margin-left:8px">删除</button>`:''}</td></tr>`).join(''):'<tr><td colspan="12" style="padding:40px;text-align:center;color:#8a94a6">暂无数据</td></tr>'}
+function showPage(id,el){document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));if(el)el.classList.add('active');id==='orders'?render():dashboard()}
+function openAdd(){if(!canEdit())return alert('当前账号没有新增权限');editIndex=-1;modalTitle.textContent='新增货物';clearForm();modal.style.display='flex'}
+function openEdit(i){if(!canEdit())return alert('当前账号没有修改权限');editIndex=i;let x=data[i];modalTitle.textContent='修改货物';fields.forEach(k=>document.getElementById('f_'+k).value=x[k]||'');f_signed.value=x.signed||'';modal.style.display='flex'}
+function clearForm(){fields.forEach(k=>{if(document.getElementById('f_'+k))document.getElementById('f_'+k).value=''});f_mode.value=settings.default_mode||'空运';f_status.value=settings.default_status||'进行中';f_ship_date.value=new Date().toISOString().slice(0,10);f_signed.value=''}
+async function saveForm(){if(!canEdit())return;let x={};fields.forEach(k=>x[k]=document.getElementById('f_'+k).value);x.signed=f_signed.value;x.month=(f_ship_date.value||'').slice(5,7)==='08'?'8月':((f_ship_date.value||'').slice(5,7)==='09'?'9月':(x.month||''));try{if(editIndex<0)await api('/api/shipments',{method:'POST',body:JSON.stringify(x)});else await api('/api/shipments/'+data[editIndex].id,{method:'PUT',body:JSON.stringify(x)});closeModal();await loadAll();alert(editIndex<0?'新增成功':'修改成功')}catch(e){alert(e.message)}}
+function closeModal(){modal.style.display='none'}
+async function deleteRow(i){if(!canDelete())return;if(confirm('确认删除这条数据吗？')){try{await api('/api/shipments/'+data[i].id,{method:'DELETE'});await loadAll()}catch(e){alert(e.message)}}}
+async function saveSettings(){if(currentUser.role!=='老板')return alert('只有老板可以修改设置');try{await api('/api/settings',{method:'PUT',body:JSON.stringify({default_mode:set_mode.value,admin_name:set_admin.value,company_name:set_company.value,default_status:set_status.value,allow_csv:set_csv.checked?'1':'0',show_remark:set_remark.checked?'1':'0'})});settings=await api('/api/settings');alert('管理员设置已保存')}catch(e){alert(e.message)}}
+async function manageUsers(){if(currentUser.role!=='老板')return;let s=prompt('新增账号 格式：账号,密码,角色（老板/操作员/查看员）');if(!s)return;let a=s.split(',').map(x=>x.trim());try{await api('/api/users',{method:'POST',body:JSON.stringify({username:a[0],password:a[1],role:a[2]||'查看员'})});alert('账号已添加')}catch(e){alert(e.message)}}
+function exportCSV(){if(settings.allow_csv==='0')return alert('管理员已关闭导出功能');let h=['国家','客户单号','件数','运输方式','收货日期','快递单号','预计重量','实际计重','费用明细','收货地址','货品信息','末端单号','物流进度','签收','备注'];let rows=data.map(x=>[x.country,x.customer_no,x.pieces,x.mode,x.ship_date,x.tracking,x.est_weight,x.actual_weight,x.cost,x.address,x.goods,x.lastmile,x.status,x.signed,x.remark]);let csv='\ufeff'+[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='云港国际_电商在途数据.csv';a.click()}
+async function loadSettingsIntoForm(){settings=await api('/api/settings');set_mode.value=settings.default_mode||'空运';set_admin.value=settings.admin_name||'管理员';set_company.value=settings.company_name||'';set_status.value=settings.default_status||'进行中';set_csv.checked=settings.allow_csv!=='0';set_remark.checked=settings.show_remark!=='0'}
+document.addEventListener('DOMContentLoaded',()=>{boot();document.querySelectorAll('main section').forEach(s=>{if(s.id!=='dashboard')s.style.display='none'});if(typeof set_mode!=='undefined')loadSettingsIntoForm().catch(()=>{})});
+</script></body></html>
